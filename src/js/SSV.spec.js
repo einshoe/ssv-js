@@ -18,11 +18,10 @@ describe('true or false', () => {
     ssv.setXAxisTitle('wavelength', 'Wavelength');
     ssv.setYAxisTitle('intensity', 'Intensity');
     ssv.addPin('pick point', 5, 10);
-    ssv.setVRule('line1', 4000);
     expect(ssv.getTraceVisibility('sky')).to.equal(true)
   });
 
-  it('SSV build spectra chart', () => {
+  it('SSV build Marz spectra chart', () => {
     const ssv = new SSV('test2');
     ssv.initialise();
     expect(ssv.getName()).to.equal('test2');
@@ -32,12 +31,43 @@ describe('true or false', () => {
     ssv.setXAxisTitle('wavelength', 'Wavelength');
     ssv.setYAxisTitle('intensity', 'Intensity');
     ssv.addPin('pick point', 2005, 10);
-    ssv.setVRule('line1', 4000);
     ssv.prepareDataForVegaSpec();
     let chart = ssv.getVegaSpec(1000, 500, 1990.0, 2030.0, 0.0, 40.0);
     expect(chart.width).to.equal(1000);
     expect(chart.height).to.equal(500);
-    console.log(chart);
+    //console.log(chart);
+  });
+
+  it('SSV build Marz cross correlation chart', () => {
+    const ssv = new SSV('test3');
+    ssv.initialise();
+    expect(ssv.getName()).to.equal('test3');
+
+    ssv.setTrace('wavelength',[2000.0,2010.0,2020.0]);
+    ssv.setTrace('intensity',[10.0,20.0,30.0]);
+    ssv.setXAxisTitle('wavelength', 'Wavelength');
+    ssv.setYAxisTitle('intensity', 'Intensity');
+    ssv.addPin('pick point', 2005, 10);
+    ssv.prepareDataForVegaSpec();
+    let xcorrelation_chart = ssv.getVegaSpecForCrossCorrelation(1000, 500);
+    expect(xcorrelation_chart.width).to.equal(1000);
+    expect(xcorrelation_chart.height).to.equal(500);
+  });
+
+  it('SSV build Marz callout chart', () => {
+    const ssv = new SSV('test4');
+    ssv.initialise();
+    expect(ssv.getName()).to.equal('test4');
+
+    ssv.setTrace('wavelength',[2000.0,2010.0,2020.0]);
+    ssv.setTrace('intensity',[10.0,20.0,30.0]);
+    ssv.setXAxisTitle('wavelength', 'Wavelength');
+    ssv.setYAxisTitle('intensity', 'Intensity');
+    ssv.addPin('pick point', 2005, 10);
+    ssv.prepareDataForVegaSpec();
+    let callout_chart = ssv.getVegaSpecForCallout(1000, 500, 1990.0, 2030.0, 0.0, 40.0);
+    expect(callout_chart.width).to.equal(1000);
+    expect(callout_chart.height).to.equal(500);
   });
 
 });

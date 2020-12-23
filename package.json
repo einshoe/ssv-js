@@ -12,7 +12,8 @@
   },
   "keywords": [
     "Spectrum",
-    "Viewer"
+    "Viewer",
+    "Marz"
   ],
   "devDependencies": {
     "@babel/core": "^7.12.1",
@@ -38,7 +39,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/einshoe/ssv.git"
+    "url": "git+https://github.com/einshoe/ssv-js.git"
   },
   "dependencies": {
     "chai": "^4.2.0",
@@ -47,7 +48,7 @@
     "vega-lite": "^4.17.0"
   },
   "bugs": {
-    "url": "https://github.com/einshoe/ssv/issues"
+    "url": "https://github.com/einshoe/ssv-js/issues"
   },
-  "homepage": "https://github.com/einshoe/ssv#readme"
+  "homepage": "https://github.com/einshoe/ssv-js#readme"
 }

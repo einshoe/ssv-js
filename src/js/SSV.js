@@ -105,7 +105,6 @@ export class SSV {
      * Inititialise this instance using predefined plugins
      */
     initialise() {
-        console.log("ssv initialised");
         this.plugin_apply("loadSpectraLines", {"message":"loading"});
         this.plugin_apply("loadTemplates", {"message":"loading"});
         this.setTemplates(this.plugin_getValue["loadTemplates"]);
@@ -146,8 +145,6 @@ export class SSV {
             this.tracesMaxs[name] = maxvalue;
             this.tracesMinClips[name] = minvalue;
             this.tracesMaxClips[name] = maxvalue;
-
-            console.log("INIT TRACE",name,minvalue,maxvalue);
         }
     }
 
@@ -217,10 +214,10 @@ export class SSV {
     }
     
     addPin(name, x, y) {
-        console.log("ADD PIN",x,y)
         this.pin["x"] = x;
         this.pin["y"] = y;
     }
+
     getPinX(name) {
         if ("x" in this.pin) {
             return this.pin["x"];
@@ -233,19 +230,12 @@ export class SSV {
         this.vrules[name] = x;
     }
 
-    addHRule(name, y) {
-        //print("addHRule")
-        //pass
-    }
-
     setXAxisTitle(name, title) {
-        //print("setXAxisTitle")
         this.xaxisTraceName = name
         this.xaxisTitle = title
     }
     
     setYAxisTitle(name, title) {
-        //print("setYAxisTitle")
         this.yaxisTraceName = name
         this.yaxisTitle = title
     }
@@ -402,7 +392,6 @@ export class SSV {
      * Generate data array snippets for efficent insertion into Vega schema
      */
     prepareDataForVegaSpec() {
-        console.log("prepareDataForVegaSpec")
         const x = this.getTrace(this.xaxisTraceName);
         const y = this.getTrace(this.yaxisTraceName);
         const values = this.values;
@@ -719,7 +708,7 @@ export class SSV {
      * 
      * @returns Vega chart schema as json
      */
-    getGeneralVegaSpec() {
+    getVegaSpecForCrossCorrelation(width, height) {
         const x = this.getTrace(this.xaxisTraceName);
         const y = this.getTrace(this.yaxisTraceName);
         const minclipx = this.getTraceMin(this.xaxisTraceName);
@@ -748,8 +737,8 @@ export class SSV {
         "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json",
         "config": {
             "view": {
-                "continuousHeight": 100,
-                "continuousWidth": 1500
+                "continuousHeight": height,
+                "continuousWidth": width
             }
         },
         "data": {
@@ -849,7 +838,7 @@ export class SSV {
      * @param {Number} maxx 
      * @param {boolean} secondary_traces 
      */
-    getCalloutVegaSpec(width, height, minx, maxx, secondary_traces=true) {
+    getVegaSpecForCallout(width, height, minx, maxx, secondary_traces=true) {
 
         const x = this.getTrace(this.xaxisTraceName);
         const y = this.getTrace(this.yaxisTraceName);
