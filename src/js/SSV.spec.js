@@ -65,7 +65,7 @@ describe('true or false', () => {
     ssv.setYAxisTitle('intensity', 'Intensity');
     ssv.addPin('pick point', 2005, 10);
     ssv.prepareDataForVegaSpec();
-    let callout_chart = ssv.getVegaSpecForCallout(1000, 500, 1990.0, 2030.0, 0.0, 40.0);
+    let callout_chart = ssv.getVegaSpec(1000, 500, 1990.0, 2030.0, 0.0, 40.0, false, false);
     expect(callout_chart.width).to.equal(1000);
     expect(callout_chart.height).to.equal(500);
   });
