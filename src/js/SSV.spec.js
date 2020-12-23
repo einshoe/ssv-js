@@ -13,12 +13,13 @@ describe('true or false', () => {
 
     ssv.setTrace('sky','blah');
     ssv.setTraceVisibility('sky',true);
-    ssv.setTraceXOffset('intensity', 100.0);
     ssv.setTraceYOffset('intensity', 200.0);
     ssv.setXAxisTitle('wavelength', 'Wavelength');
     ssv.setYAxisTitle('intensity', 'Intensity');
-    ssv.addPin('pick point', 5, 10);
+    ssv.setPin('pick point', 5, 10);
     expect(ssv.getTraceVisibility('sky')).to.equal(true)
+    expect(ssv.getPinX('pick point')).to.equal(5)
+    expect(ssv.getPinY('pick point')).to.equal(10)
   });
 
   it('SSV build Marz spectra chart', () => {
@@ -30,7 +31,7 @@ describe('true or false', () => {
     ssv.setTrace('intensity',[10.0,20.0,30.0]);
     ssv.setXAxisTitle('wavelength', 'Wavelength');
     ssv.setYAxisTitle('intensity', 'Intensity');
-    ssv.addPin('pick point', 2005, 10);
+    ssv.setPin('pick point', 2005, 10);
     ssv.prepareDataForVegaSpec();
     let chart = ssv.getVegaSpec(1000, 500, 1990.0, 2030.0, 0.0, 40.0);
     expect(chart.width).to.equal(1000);
@@ -47,7 +48,7 @@ describe('true or false', () => {
     ssv.setTrace('intensity',[10.0,20.0,30.0]);
     ssv.setXAxisTitle('wavelength', 'Wavelength');
     ssv.setYAxisTitle('intensity', 'Intensity');
-    ssv.addPin('pick point', 2005, 10);
+    ssv.setPin('pick point', 2005, 10);
     ssv.prepareDataForVegaSpec();
     let xcorrelation_chart = ssv.getVegaSpecForCrossCorrelation(1000, 500);
     expect(xcorrelation_chart.width).to.equal(1000);
@@ -63,7 +64,7 @@ describe('true or false', () => {
     ssv.setTrace('intensity',[10.0,20.0,30.0]);
     ssv.setXAxisTitle('wavelength', 'Wavelength');
     ssv.setYAxisTitle('intensity', 'Intensity');
-    ssv.addPin('pick point', 2005, 10);
+    ssv.setPin('pick point', 2005, 10);
     ssv.prepareDataForVegaSpec();
     let callout_chart = ssv.getVegaSpec(1000, 500, 1990.0, 2030.0, 0.0, 40.0, false, false);
     expect(callout_chart.width).to.equal(1000);

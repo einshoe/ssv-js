@@ -27,7 +27,6 @@ export class SSV {
         this.tracesMinClips = {};
         this.tracesMaxClips = {};
         this.traces_visibility = {};
-        this.traces_xoffset = {};
         this.traces_yoffset = {};
         this.traces_colour = {};
 
@@ -70,7 +69,6 @@ export class SSV {
 
     /**
      * Register a plugin function
-     * @method plugin_register
      * @param {any} plugin Name and function associated with the plugin
      *
      * @return None
@@ -89,9 +87,16 @@ export class SSV {
         const func =  this.plugins[feature] || this.core[feature];
         this.plugin_setValue(feature,func(this, args));
     }
+
+    /**
+     * Update the current value associated with the named plugin feature
+     * @param {*} feature 
+     * @param {*} newVal 
+     */
     plugin_setValue(feature, newVal) {
         this.plugin_value[feature] = newVal;
     }
+
     /**
      * Return current value associated with the named plugin feature
      * @param {String} feature 
@@ -118,14 +123,13 @@ export class SSV {
     }
 
     /**
-     * 
+     * Set data associated with a named trace
      * @param {String} name - The name of the trace
      * @param {Array} data - The trace data as an array of numbers
      */
     setTrace(name, data) {
         this.traces[name] = data;
         this.traces_visibility[name] = true;
-        this.traces_xoffset[name] = 0;
         this.traces_yoffset[name] = 0;
         this.traces_colour[name] = "black";
         if (data.length>0) {
@@ -159,15 +163,25 @@ export class SSV {
         return this.traces[name];
     }
 
+    /**
+     * Get minimum value of the named trace
+     * @param {String} name 
+     * @returns {Number}
+     */
     getTraceMin(name) {
         return this.tracesMins[name];
     }
+
+    /**
+     * Get maximum value of the named trace
+     * @param {String} name
+     * @returns {Number}
+     */
     getTraceMax(name) {
         return this.tracesMaxs[name];
     }
 
     setTraceMinClip(name, minclip) {
-        console.log("SET TRACE MIN CLIP",name,minclip)
         this.tracesMinClips[name] = minclip;
     }
 
@@ -186,18 +200,19 @@ export class SSV {
     /**
      * Set the visibility of the named trace
      * @param {String} name 
-     * @param {boolean} is_visible 
+     * @param {Boolean} is_visible 
      */
     setTraceVisibility(name, is_visible) {
         this.traces_visibility[name] = is_visible;
     }
 
+    /**
+     * Get the visibility of the named trace
+     * @param {String} name 
+     * @returns {Boolean} - trace visibility
+     */
     getTraceVisibility(name) {
         return this.traces_visibility[name];
-    }
-    
-    setTraceXOffset(name, xoffset) {
-        this.traces_xoffset[name] = xoffset;
     }
     
     setTraceYOffset(name, yoffset) {
@@ -213,33 +228,76 @@ export class SSV {
         this.traces_colour[name] = colour;
     }
     
-    addPin(name, x, y) {
-        this.pin["x"] = x;
-        this.pin["y"] = y;
+    /**
+     * Set the x,y coordinate of the named pin
+     * @param {String} name 
+     * @param {Number} x 
+     * @param {Number} y 
+     */
+    setPin(name, x, y) {
+        let coord = {"x":x, "y":y}
+        this.pin[name] = coord
     }
 
+    /**
+     * Get the x coordiinate of the named pin
+     * @param {String} name 
+     */
     getPinX(name) {
-        if ("x" in this.pin) {
-            return this.pin["x"];
+        if (name in this.pin) {
+            return this.pin[name].x;
         } else {
             return 0.0;
         }
     }
 
+    /**
+     * Get the y coordinate of the named pin
+     * @param {Number} name 
+     */
+    getPinY(name) {
+        if (name in this.pin) {
+            return this.pin[name].y;
+        } else {
+            return 0.0;
+        }
+    }
+
+    /**
+     * Set the x coordinate of a named vertical rule
+     * @param {String} name 
+     * @param {Number} x 
+     */
     setVRule(name, x) {
         this.vrules[name] = x;
     }
 
+    /**
+     * Set named trace and axis title to associate with the X axis
+     * @param {String} name 
+     * @param {String} title 
+     */
     setXAxisTitle(name, title) {
         this.xaxisTraceName = name
         this.xaxisTitle = title
     }
     
+    /**
+     * Set named trace and axis title to associate with the Y axis
+     * @param {String} name 
+     * @param {String} title 
+     */
     setYAxisTitle(name, title) {
         this.yaxisTraceName = name
         this.yaxisTitle = title
     }
 
+    /**
+     * Set the active template
+     * @param {Integer} id 
+     * @param {Array} data 
+     * @param {Number} z 
+     */
     setActiveTemplate(id,data,z) {
         this.activeTemplateId = id;
         this.activeTemplateData = data;
@@ -254,23 +312,43 @@ export class SSV {
         this.templates = templates;
     }
 
+    /**
+     * Set the redshift applied to the currently active template and each of the spectra lines.
+     * This is an initial value and is sensitive to the "redshift" signal
+     * @param {Number} z 
+     */
     setRedshift(z) {
         this.z = z;
         this.z_fact = (1.0 + this.z) / (1.0 + this.activeTemplateRedshift);
     }
 
+    /**
+     * Set the width of the Spectrum box smooth filter
+     * @param {Integer} half_width 
+     */
     setSmoothHalfWidth(half_width) {
         this.smooth_half_width = half_width;
     }
 
+    /**
+     * Set the vertical offset of the currently active template.  This is an initial value
+     * and is sensitive to the "templateOffset" signal
+     * @param {Number} yoffset 
+     */
     setActiveTemplateYOffset(yoffset) {
         this.activeTemplateYoffset = yoffset;
     }
 
+    /**
+     * Get the dictionary of available templates keyed by "id"
+     */
     getTemplates() {
         return this.templates;
     }
 
+    /**
+     * Get the array of template ids
+     */
     getTemplateIds() {
         let result = [];
         for (let i=0;i<this.templates.length;i++) {
@@ -411,7 +489,10 @@ export class SSV {
         }
     }
     /**
-     * Produce Marz Simple Spectrum View chart
+     * Produce Marz Simple Spectrum View chart.
+     * The returned vega schema will have the following signals:
+     * templateOffset : Vertically offset the active template
+     * redshift : apply redshift to the active template and each of the spectra lines
      * 
      * @param {integer} width 
      * @param {integer} height 
@@ -506,12 +587,8 @@ export class SSV {
                 if (key==this.xaxisTraceName) continue;
                 if (key==this.yaxisTraceName) continue;
 
-                const xoffset = this.traces_xoffset[key];
                 const yoffset = this.traces_yoffset[key];
                 let xkey = this.xaxisTraceName;
-                if (xoffset != 0) {
-                    xkey += "T";
-                }
                 let ykey = key;
                 if (yoffset != 0) {
                     ykey += "T";
@@ -527,9 +604,6 @@ export class SSV {
                         "size": {"value": 0.4}
                     }
                 };
-                if (xoffset != 0) {
-                    aline["transform"].push({"calculate": "datum." + this.xaxisTraceName + " + "+xoffset, "as": xkey});
-                }
                 if (yoffset != 0) {
                     aline["transform"].push({"calculate": "datum." + key + " + "+yoffset, "as": ykey});
                 }
